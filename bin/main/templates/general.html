@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headerfiles">
+    <meta charset="UTF-8" />
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+    <div class="footer" th:fragment="footer">
+        <hr class="footer-hr">
+        <div class="footer-content">
+            <a th:href="@{/}">Главная страница</a>
+            <a th:href="@{/health}">Состояние релиза</a>
+            <a th:href="@{https://github.com/NotLebedev/cmc-msu-web-prak}">Исходный код проекта</a>
+            <p>&copy; Галустов Артемий, 2022</p>
+        </div>
+    </div>
+
+    <div class="dropdown" th:fragment="dropdown(name, nameString, val, requestParam)">
+        <input type="text" style="display: none;" th:name="${requestParam}" th:id="${name + 'Input'}">
+        <button th:arg0="${name + 'Drop'}"
+                onclick="dropFunction(this.getAttribute('arg0'))" class="dropbtn" type="button"
+                th:text="${nameString}"></button>
+        <div th:id="${name + 'Drop'}" class="dropdown-content"
+             th:arg0="${name + 'Drop'}"
+             onmouseleave="dropFunction(this.getAttribute('arg0'))">
+            <input type="text" placeholder="Search.." th:id="${name + 'FilterInput'}" class="dropInput"
+                   th:arg0="${name + 'FilterInput'}"
+                   th:arg1="${name + 'Drop'}"
+                   onkeyup="filterFunction(this.getAttribute('arg0'), this.getAttribute('arg1'))">
+            <div>
+                <button type="button" th:value
+                        th:arg0="${name + 'Input'}"
+                        onclick="updateInput(this.getAttribute('arg0'), this)">Нет</button>
+            </div>
+            <div th:each="place : ${val}">
+                <button type="button" th:text="${place}" th:value="${place}"
+                        th:arg0="${name + 'Input'}"
+                        onclick="updateInput(this.getAttribute('arg0'), this)"></button>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="textDropdown(name, nameString, valDefault, val, requestParam)">
+        <label th:inline="text" >
+            [[${nameString}]]
+            <input type="text" th:name="${requestParam}" class="inputText1" th:id="${name + 'Input'}"
+                   th:arg0="${name + 'Drop'}"
+                   th:arg1="${name + 'Input'}"
+                   onclick="dropFunction(this.getAttribute('arg0'));"
+                   onkeyup="filterFunction(this.getAttribute('arg1'), this.getAttribute('arg0'));"
+                   th:value="${valDefault}"
+                   placeholder="        ">
+
+            <div th:id="${name + 'Drop'}" class="dropdown-content"
+                 th:arg0="${name + 'Drop'}"
+                 onmouseleave="dropFunction(this.getAttribute('arg0'))"
+                 style="margin-left: 155px;">
+                <div th:each="place : ${val}">
+                    <button type="button" th:text="${place}" th:value="${place}"
+                            th:arg0="${name + 'Input'}"
+                            onclick="updateInput(this.getAttribute('arg0'), this)"></button>
+                </div>
+            </div>
+        </label>
+    </div>
+
+    <div class="dropdown" th:fragment="mapDropdown(name, nameString, val, requestParam)">
+        <input type="text" style="display: none;" th:name="${requestParam}" th:id="${name + 'Input'}">
+        <button th:arg0="${name + 'Drop'}"
+                onclick="dropFunction(this.getAttribute('arg0'))" class="dropbtn" type="button"
+                th:text="${nameString}"></button>
+        <div th:id="${name + 'Drop'}" class="dropdown-content"
+             th:arg0="${name + 'Drop'}"
+             onmouseleave="dropFunction(this.getAttribute('arg0'))">
+            <input type="text" placeholder="Search.." th:id="${name + 'FilterInput'}" class="dropInput"
+                   th:arg0="${name + 'FilterInput'}"
+                   th:arg1="${name + 'Drop'}"
+                   onkeyup="filterFunction(this.getAttribute('arg0'), this.getAttribute('arg1'))">
+            <div>
+                <button type="button" th:value
+                        th:arg0="${name + 'Input'}"
+                        onclick="updateInput(this.getAttribute('arg0'), this)">Нет</button>
+            </div>
+            <div th:each="place : ${val}">
+                <button type="button" th:text="${place.getFirst()}" th:value="${place.getSecond()}"
+                        th:arg0="${name + 'Input'}"
+                        onclick="updateInput(this.getAttribute('arg0'), this)"></button>
+            </div>
+        </div>
+    </div>
+</body>

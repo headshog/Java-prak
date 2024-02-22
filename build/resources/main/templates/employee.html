@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Welcome</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dropdown.css}"/>
+</head>
+<body class="site">
+<main class="site-content">
+    <script th:src="@{/js/dropdown.js}"></script>
+    <h1 th:if="${employee.getActionMode().toString().equals('UPDATE')}">Информация о служащем</h1>
+    <h1 th:if="${employee.getActionMode().toString().equals('CREATE')}">Добавить служащего</h1>
+    <form action="#" th:action="@{/employees/employee}" method="post">
+        <input style="display: none;" name="mode" type="text" th:value="${employee.getActionMode().toString()}">
+        <input th:if="${employee.getActionMode().toString().equals('UPDATE')}" style="display: none;" name="id"
+               type="text" th:value="${employee.getId()}">
+        <div>
+            <label>
+                Имя сотрудника
+                <input style="max-width: 70vw;" class="inputText1 resizing-input" type="text" name="name"
+                       th:value="${employee.getName()}" placeholder="        ">
+            </label>
+        </div>
+        <div>
+            <label>
+                Адрес проживания
+                <input style="max-width: 70vw;" class="inputText1 resizing-input" type="text" name="address"
+                       th:value="${employee.getAddress()}" placeholder="        ">
+            </label>
+        </div>
+        <div th:replace="general :: textDropdown('eduLevel', 'Уровень образования',
+                ${employee.getEducationLevel()}, ${educationLevels}, 'educationLevel')"></div>
+        <div th:replace="general :: textDropdown('eduPlace', 'Место обучения',
+                ${employee.getEducationPlace()}, ${educationPlaces}, 'educationPlace')"></div>
+
+
+        <div th:if="${employee.getActionMode().toString().equals('UPDATE')}">
+            <div style="margin-top: 0.5em; margin-bottom: 0.5em;"
+                 th:text="${'Стаж ' + employee.getEmploymentDuration() / 360 + ' Лет ' +
+                 employee.getEmploymentDuration() % 360 / 30 + ' Месяцев ' +
+                 employee.getEmploymentDuration() % 30 + ' Дней '}">
+            </div>
+
+            <div style="margin-top: 0.5em; margin-bottom: 0.5em;">
+                <table class="autoTable" style="width: fit-content;">
+                    <thead>
+                        <tr>
+                            <th><a style="color: white" th:href="${'/positions/history?id=' + employee.getId()}">
+                                    История занимаемых должностей</a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${employee.getEmploymentHistory().isEmpty()}">
+                            <td style="border-left: none; border-right: none;">Пусто</td>
+                        </tr>
+                        <tr th:each="position : ${employee.getEmploymentHistory()}">
+                            <td style="border-left: none; border-right: none;" th:text="${position}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <input class="button1" type="submit" value="Сохранить"
+               onclick="return confirm('Сохранить изменения?')"/>
+    </form>
+    <form action="#" th:action="@{/employees/employee}" method="post"
+          th:if="${employee.getActionMode().toString().equals('UPDATE')}">
+        <input style="display: none;" name="mode" type="text" value="DELETE">
+        <input style="display: none;" name="id" type="text" th:value="${employee.getId()}">
+        <input class="button1 danger" type="submit" value="Удалить служащего"
+               onclick="return confirm('Удалить служащего и историю занимаемых должностей?')"/>
+    </form>
+    <script th:src="@{/js/inputs.js}"></script>
+</main>
+
+<footer th:insert="general :: footer"></footer>
+</body>
+
+</html>

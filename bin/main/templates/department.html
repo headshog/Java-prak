@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Welcome</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dropdown.css}"/>
+</head>
+<body class="site">
+<main class="site-content">
+    <script th:src="@{/js/dropdown.js}"></script>
+    <script th:src="@{/js/buttons.js}"></script>
+    <h1 th:if="${mode.equals(mode.UPDATE)}">Информация о подразделении</h1>
+    <h1 th:if="${mode.equals(mode.CREATE)}">Добавить подразделение</h1>
+
+    <form action="#" th:action="${'/departments/department'}" method="post">
+        <input style="display: none;" name="mode" type="text" th:value="${mode.toString()}">
+        <input th:if="${mode.equals(mode.UPDATE)}" style="display: none;" name="id" type="text"
+               th:value="${department.getId()}">
+
+        <div>
+            <label>
+                Название подразделения
+                <input style="max-width: 70vw;" class="inputText1 resizing-input" type="text" name="name"
+                       th:value="${department.getName()}" placeholder="        ">
+            </label>
+        </div>
+
+        <div th:replace="general :: textDropdown('supName', 'Головное подразделение', ${department.getSuperName()},
+            ${departmentsList}, 'superName')"></div>
+
+        <input class="button1" type="submit" value="Сохранить"
+               onclick="return confirm('Сохранить изменения?')"/>
+    </form>
+
+    <form action="#" th:action="@{/departments/department}" method="post"
+          th:if="${mode.equals(mode.UPDATE)}">
+        <input th:if="${department.getStatus().equals(department.getStatus().ACTIVE)}"
+               style="display: none;" name="mode" type="text" value="DELETE">
+        <input th:if="${department.getStatus().equals(department.getStatus().DEFUNCT)}"
+               style="display: none;" name="mode" type="text" value="RESTORE">
+        <input style="display: none;" name="id" type="text" th:value="${department.getId()}">
+        <input th:if="${department.getStatus().equals(department.getStatus().ACTIVE)}"
+               class="button1 danger" type="submit" value="Закрыть подразделение"
+               onclick="return confirm('Закрыть подразделение и все должности?')"/>
+        <input th:if="${department.getStatus().equals(department.getStatus().DEFUNCT)}"
+               class="button1 danger" type="submit" value="Возобновить работу подразделения"
+               onclick="return confirm('Возобновить работу подразделения?')"/>
+    </form>
+
+    <div th:if="${mode.equals(mode.UPDATE)}">
+        <div style="margin-top: 0.5em; margin-bottom: 0.5em;">
+            <table class="autoTable" style="width: fit-content;">
+                <thead>
+                <tr>
+                    <th>Должность</th>
+                    <th>Сотрудник</th>
+                    <th>Описание</th>
+                    <th>Состояние</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${department.getPositions().isEmpty()}">
+                    <td style="border-left: none; border-right: none;">Пусто</td>
+                </tr>
+                <tr th:each="position : ${department.getPositions()}">
+                    <td>
+                        <form th:id="${'row' + position.getId()}"  action="#"
+                              th:action="@{/positions/position}" method="post">
+                        <label>
+                            <input style="max-width: 30vw; background-color:rgba(0, 0, 0, 0);" class="inputText1 resizing-input" type="text" name="name"
+                                   th:value="${position.getName()}" placeholder="        ">
+                        </label>
+                        </form>
+                    </td>
+                    <td th:if="${position.getEmployeeId() != -1}" style="border-left: none; border-right: none;">
+                        <a th:href="${'/employees/employee?id=' + position.getEmployeeId()}"
+                           th:text="${position.getEmployee()}"></a>
+                    </td>
+                    <td th:if="${position.getEmployeeId() == -1}" style="border-left: none; border-right: none;">
+                        Должность свободна
+                    </td>
+                    <td>
+                        <label>
+                            <input style="max-width: 30vw; background-color:rgba(0, 0, 0, 0);" class="inputText1 resizing-input" type="text"
+                                   name="description" th:form="${'row' + position.getId()}"
+                                   th:value="${position.getDescription()}" placeholder="        ">
+                        </label>
+                    </td>
+                    <td>
+                        <label th:if="${position.getStatus().equals('true')}">
+                            <input type="text" style="display: none;" name="status"
+                                   th:value="${position.getStatus()}" th:form="${'row' + position.getId()}"
+                                   th:id="${'q' + position.getId()}">
+                            <input class="button1" th:form="${'row' + position.getId()}"
+                                   value="Должность открыта" type="button"
+                                   th:arg0="${'q' + position.getId()}"
+                                   onclick="flipValue(this, this.getAttribute('arg0'),
+                               'Должность открыта', 'Должность закрыта');">
+                        </label>
+                        <label th:if="${position.getStatus().equals('false')}">
+                            <input type="text" style="display: none;" name="status"
+                                   th:value="${position.getStatus()}" th:form="${'row' + position.getId()}"
+                                   th:id="${'q' + position.getId()}">
+                            <input class="button1" th:form="${'row' + position.getId()}"
+                                   value="Должность закрыта" type="button"
+                                   th:arg0="${'q' + position.getId()}"
+                                   onclick="flipValue(this, this.getAttribute('arg0'),
+                               'Должность открыта', 'Должность закрыта');">
+                        </label>
+                    </td>
+                    <td>
+                        <input style="display: none;" name="mode" type="text" value="UPDATE" th:form="${'row' + position.getId()}">
+                        <input style="display: none;" name="id" type="text" th:value="${position.getId()}" th:form="${'row' + position.getId()}">
+                        <input style="display: none;" name="depId" type="text" th:value="${department.getId()}" th:form="${'row' + position.getId()}">
+                        <input class="button1 danger" type="submit" value="Сохранить" th:form="${'row' + position.getId()}"
+                               onclick="return confirm('Сохранить изменения должности?')"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">Новая должность</td>
+                </tr>
+                <tr> <!--- New position -->
+                    <td>
+                        <form id="newPosition"  action="#"
+                              th:action="@{/positions/position}" method="post">
+                            <label>
+                                <input style="max-width: 30vw; background-color:rgba(0, 0, 0, 0);"
+                                       class="inputText1 resizing-input" type="text" name="name"
+                                       value="" placeholder="        ">
+                            </label>
+                        </form>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <label>
+                            <input style="max-width: 30vw; background-color:rgba(0, 0, 0, 0);" class="inputText1 resizing-input" type="text"
+                                   name="description" th:form="newPosition"
+                                   value="" placeholder="        ">
+                        </label>
+                    </td>
+                    <td>
+                        <label>
+                            <input type="text" style="display: none;" name="status"
+                                   value="true" form="newPosition"
+                                   id="qNew">
+                            <input class="button1" form="newPosition"
+                                   value="Должность открыта" type="button"
+                                   onclick="flipValue(this, 'qNew',
+                               'Должность открыта', 'Должность закрыта');">
+                        </label>
+                    </td>
+                    <td>
+                        <input style="display: none;" name="mode" type="text" value="CREATE" form="newPosition">
+                        <input style="display: none;" name="depId" type="text" th:value="${department.getId()}" form="newPosition">
+                        <input style="display: none;" name="id" type="text" value="-1" form="newPosition">
+                        <input class="button1 danger" type="submit" value="Создать" form="newPosition"
+                               onclick="return confirm('Добавить должность?')"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer th:insert="general :: footer"></footer>
+</body>
+
+</html>
