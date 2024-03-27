@@ -37,7 +37,7 @@ public class Workers implements CommonEntity<Long> {
 
     @Column(nullable = false, name = "BirthDate")
     @NonNull
-    private String birth_date;
+    private String birthDate;
 
     @Override
     public boolean equals(Object o) {
