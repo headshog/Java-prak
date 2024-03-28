@@ -41,12 +41,7 @@ public class PostsController {
     }
 
     @GetMapping("/editPost")
-    public String editPostPage(@RequestParam(name = "postId", required = false) Long postId, Model model) {
-        if (postId == null) {
-            model.addAttribute("place", new Posts());
-            return "editPlace";
-        }
-
+    public String editPostPage(@RequestParam(name = "postId") Long postId, Model model) {
         Posts post = postsDAO.getById(postId);
 
         if (post == null) {
@@ -60,12 +55,25 @@ public class PostsController {
     }
 
     @PostMapping("/savePost")
-    public String savePostPage(@RequestParam(name = "name") String name,
+    public String savePostPage(@RequestParam(name = "postId", required = false) Long postId,
+                               @RequestParam(name = "name") String name,
                                @RequestParam(name = "responsibilities") String responsibilities,
                                Model model) {
-        Posts post = new Posts(name, responsibilities);
-        postsDAO.save(post);
+        Posts post;
+        if (postId == null) {
+            post = new Posts(name, responsibilities);
+            postsDAO.save(post);
+        } else {
+            post = postsDAO.getById(postId);
 
+            if (post == null) {
+                model.addAttribute("error_msg", "В базе нет должности с заданным ID: " + postId);
+                return "errorPage";
+            }
+
+            post.setName(name);
+            post.setResponsibilities(responsibilities);
+        }
         return String.format("redirect:/post?postId=%d", post.getId());
     }
 

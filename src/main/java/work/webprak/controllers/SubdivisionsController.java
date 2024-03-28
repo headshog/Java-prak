@@ -14,6 +14,7 @@ import work.webprak.DAO.impl.WorkersDAOimpl;
 import work.webprak.DAO.PostsHistoryDAO;
 import work.webprak.DAO.SubdivisionsDAO;
 import work.webprak.models.Workers;
+import work.webprak.models.Subdivisions;
 
 import java.util.List;
 
@@ -28,47 +29,64 @@ public class SubdivisionsController {
     @Autowired
     private final SubdivisionsDAO subdivisionsDAO = new SubdivisionsDAOImpl();
 
-    @GetMapping("/workers")
-    public String workersListPage(Model model) {
-        List<Workers> workers = (List<Workers>)workersDAO.getAll();
+    @GetMapping("/subdivisions")
+    public String subdivisionsListPage(Model model) {
+        List<Subdivisions> subdivisions = (List<Subdivisions>)subdivisionsDAO.getAll();
+        model.addAttribute("subdivisions", subdivisions);
+        model.addAttribute("workersService", workersDAO);
+        model.addAttribute("postshistoryService", postsHistoryDAO);
+        model.addAttribute("subdivisionsService", subdivisionsDAO);
+        return "subdivisions";
+    }
+
+    @GetMapping("/subdivisionWorkers")
+    public String subdivisionWorkersPage(@RequestParam(name = "subdivisionId") Long subdivisionId, Model model) {
+        Subdivisions subdivision = subdivisionsDAO.getById(subdivisionId);
+
+        if (subdivision == null) {
+            model.addAttribute("error_msg", "В базе нет подразделения с заданным ID: " + subdivisionId);
+            return "errorPage";
+        }
+
+        List<Workers> workers = subdivisionsDAO.getWorkersFromSubdivision(subdivisionId);
+
+        model.addAttribute("subdivision", subdivision);
         model.addAttribute("workers", workers);
         model.addAttribute("workersService", workersDAO);
         model.addAttribute("postshistoryService", postsHistoryDAO);
-        return "workers";
+        model.addAttribute("subdivisionsService", subdivisionsDAO);
+        return "subdivisionWorkers";
     }
 
-    @GetMapping("/worker")
-    public String workerPage(@RequestParam(name = "workerId") Long workerId, Model model) {
-        Workers worker = workersDAO.getById(workerId);
+    @GetMapping("/subdivisionInner")
+    public String subdivisionInnerPage(@RequestParam(name = "subdivisionId") Long subdivisionId, Model model) {
+        Subdivisions subdivision = subdivisionsDAO.getById(subdivisionId);
 
-        if (worker == null) {
-            model.addAttribute("error_msg", "В базе нет работника с заданным ID: " + workerId);
+        if (subdivision == null) {
+            model.addAttribute("error_msg", "В базе нет подразделения с заданным ID: " + subdivisionId);
             return "errorPage";
         }
 
-        model.addAttribute("worker", worker);
+        List<Subdivisions> innerSubdivisions = subdivisionsDAO.getInnerSubdivisions(subdivisionId);
+
+        model.addAttribute("subdivision", subdivision);
+        model.addAttribute("innerSubdivisions", innerSubdivisions);
         model.addAttribute("workersService", workersDAO);
         model.addAttribute("postshistoryService", postsHistoryDAO);
-        return "worker";
+        model.addAttribute("subdivisionsService", subdivisionsDAO);
+        return "subdivisionInner";
     }
 
-    @GetMapping("/editWorker")
-    public String editWorkerPage(@RequestParam(name = "workerId", required = false) Long workerId, Model model) {
-        if (workerId == null) {
-            model.addAttribute("person", new Workers());
-            model.addAttribute("workersService", workersDAO);
-            model.addAttribute("postshistoryService", postsHistoryDAO);
-            return "editWorker";
-        }
+    @GetMapping("/editSubdivisionWorkers")
+    public String editSubdivisionWorkersPage(@RequestParam(name = "subdivisionId") Long subdivisionId, Model model) {
+        Subdivisions subdivision = subdivisionsDAO.getById(subdivisionId);
 
-        Workers worker = workersDAO.getById(workerId);
-
-        if (worker == null) {
-            model.addAttribute("error_msg", "В базе нет работника с заданным ID: " + workerId);
+        if (subdivision == null) {
+            model.addAttribute("error_msg", "В базе нет подразделения с заданным ID: " + subdivisionId);
             return "errorPage";
         }
 
-        model.addAttribute("worker", worker);
+        model.addAttribute("worker", subdivision);
         model.addAttribute("workersService", workersDAO);
         model.addAttribute("postshistoryService", postsHistoryDAO);
         return "editWorker";
