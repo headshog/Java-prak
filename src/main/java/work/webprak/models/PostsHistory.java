@@ -39,10 +39,10 @@ public class PostsHistory implements CommonEntity<Long> {
 
     @Column(nullable = false, name = "WorkStart")
     @NonNull
-    private Timestamp work_start;
+    private Timestamp workStart;
 
     @Column(nullable = true, name = "WorkEnd")
-    private Timestamp work_end;
+    private Timestamp workEnd;
 
     @Override
     public boolean equals(Object o) {
@@ -53,7 +53,7 @@ public class PostsHistory implements CommonEntity<Long> {
                 && Objects.equals(worker, other.worker)
                 && Objects.equals(post, other.post)
                 && Objects.equals(subdivision, other.subdivision)
-                && Objects.equals(work_start, other.work_start)
-                && Objects.equals(work_end, other.work_end);
+                && Objects.equals(workStart, other.workStart)
+                && Objects.equals(workEnd, other.workEnd);
     }
 }

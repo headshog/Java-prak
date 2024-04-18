@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        .indent {
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-top: 20px;
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary" th:fragment="page-header">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" id="rootLink" href="/">Главная страница</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" id="workersListLink" th:href="@{workers}">Сотрудники</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" id="postsListLink" th:href="@{posts}">Должности</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" id="subdivisionsListLink" th:href="@{subdivisions}">Подразделения</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div th:fragment="site-script">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script th:src="@{/jquery.filtertable.js}"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <style>
+        .ui-autocomplete {
+            max-height: 300px;
+            max-width: 200px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        * html .ui-autocomplete {
+            height: 300px;
+        }
+        .input-filter-container { top: 1em; right: 1em; color: rgb(255, 255, 255); background-color: rgb(47, 123, 228); padding: 0.5em; border-radius: 4px; }
+    </style>
+</div>
+
+</body>
+</html>

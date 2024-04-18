@@ -22,7 +22,7 @@ public class Subdivisions implements CommonEntity<Long> {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "HeadSubdID")
     @ToString.Exclude
-    private Subdivisions head_subdivision;
+    private Subdivisions headSubdivision;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DirectorID")
@@ -39,7 +39,7 @@ public class Subdivisions implements CommonEntity<Long> {
         if (o == null || getClass() != o.getClass()) return false;
         Subdivisions other = (Subdivisions) o;
         return Objects.equals(id, other.id)
-                && Objects.equals(head_subdivision, other.head_subdivision)
+                && Objects.equals(headSubdivision, other.headSubdivision)
                 && Objects.equals(director, other.director)
                 && Objects.equals(name, other.name);
     }

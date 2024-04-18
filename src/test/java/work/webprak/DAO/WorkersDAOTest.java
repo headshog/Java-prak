@@ -66,12 +66,12 @@ public class WorkersDAOTest {
         assertEquals(1, workerToryList.size());
 
         Workers workerTory = workerToryList.get(0);
-        List<Pair<Posts, Subdivisions>> workerToryHistory = workersDAO.getWorkerHistory(workerTory.getId());
+        List<PostsHistory> workerToryHistory = workersDAO.getWorkerHistory(workerTory.getId());
         assertEquals(2, workerToryHistory.size());
-        assertEquals(1, workerToryHistory.get(0).getFirst().getId());
-        assertEquals(1, workerToryHistory.get(0).getSecond().getId());
-        assertEquals(4, workerToryHistory.get(1).getFirst().getId());
-        assertEquals(4, workerToryHistory.get(1).getSecond().getId());
+        assertEquals(1, workerToryHistory.get(0).getPost().getId());
+        assertEquals(1, workerToryHistory.get(0).getSubdivision().getId());
+        assertEquals(4, workerToryHistory.get(1).getPost().getId());
+        assertEquals(4, workerToryHistory.get(1).getSubdivision().getId());
     }
 
     @Test

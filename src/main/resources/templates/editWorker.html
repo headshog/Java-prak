@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Редактировать сотрудника</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        .editWorker {
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="general :: page-header"> </div>
+
+<div class="editWorker">
+    <table>
+        <tbody>
+        <form method="post" action="/saveWorker">
+            <tr>
+            <td><input type="hidden" name="workerId" th:value="${worker.getId()}"/></td>
+            </tr>
+
+            <tr>
+            <td><label for="workerName">ФИО:</label></td>
+            <td><input type="text" id="workerName" name="workerName" required th:value="${worker.getName()}"></td>
+            </tr>
+
+            <tr>
+            <td><label for="workerName">Дата рождения:</label></td>
+            <td><input type="text" id="workerBirthDate" name="workerBirthDate" required th:value="${worker.getBirthDate()}"></td>
+            </tr>
+
+            <tr>
+            <td><label for="workerName">Адрес проживания:</label></td>
+            <td><input type="text" id="workerAddress" name="workerAddress" required th:value="${worker.getAddress()}"></td>
+            </tr>
+
+            <tr>
+            <td><label for="workerName">Образование:</label></td>
+            <td><input type="text" id="workerGraduation" name="workerGraduation" required th:value="${worker.getGraduation()}"></td>
+            </tr>
+
+            <tr>
+            <td><label for="workerName">Опыт работы:</label></td>
+            <td><input type="text" id="workerExperience" name="workerExperience" required th:value="${worker.getExperience()}"></td>
+            </tr>
+
+            <tr>
+            <td><input id="submitButton" type="submit" value="Сохранить"
+                       onclick="return confirm('Изменить данную запись?')"
+                       class="btn btn-outline-primary"></td>
+            </tr>
+        </form>
+        </tbody>
+    </table>
+    <br>
+
+    <div class="input-filter-container"><label for="input-filter">Искать в таблице:</label>
+        <input onkeyup="filterTableAll('input-filter', 'table')" type="search" id="input-filter" placeholder="искать">
+    </div>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col"> Должность </th>
+            <th scope="col"> Подразделение </th>
+            <th scope="col"> Начало работы </th>
+            <th scope="col"> Конец работы </th>
+        </tr>
+        </thead>
+        <tbody id="table">
+        <tr th:each="history : ${workerHistory}">
+            <td><a th:if="${history.getPost() != null}"
+                   th:href="'/post?postId=' + ${history.getPost().getId()}">
+                <span th:text="${history.getPost().getName()}"> </span></a>
+                <span th:if="${history.getPost() == null}"
+                      th:text="Удалено"> </span>
+            </td>
+
+            <td><a th:if="${history.getSubdivision() != null}"
+                   th:href="'/subdivision?subdivisionId=' + ${history.getSubdivision().getId()}">
+                <span th:text="${history.getSubdivision().getName()}"> </span></a>
+                <span th:if="${history.getSubdivision() == null}"
+                      th:text="Удалено"> </span>
+            </td>
+
+            <td><span th:text="${history.getWorkStart()}"> </span></td>
+
+            <td><span th:if="${history.getWorkEnd() != null}" th:text="${history.getWorkEnd()}"> </span>
+                <span th:if="${history.getWorkEnd() == null}" th:text="Активен"> </span></td>
+
+            <td><form method="post" action="/removePostHistory">
+                <input type="hidden" name="workerId" th:value="${worker.getId()}"/>
+                <input type="hidden" name="postHistoryId" th:value="${history.getId()}"/>
+                <button id="deleteButton" type="submit" onclick="return confirm('Удалить данную запись?')"
+                        class="btn btn-outline-primary">Удалить</button>
+            </form></td>
+        </tr>
+        <form method="post" action="/addPostHistory">
+            <tr id="postHistoryTable" style="visibility:hidden">
+                <td><input id="postName" type="text" name="postName" /></td>
+                <td><input id="subdivisionName" type="text" name="subdivisionName" /></td>
+                <td><input id="workStart" type="text" name="workStart" /></td>
+                <td><input id="workEnd" type="text" name="workEnd" /></td>
+                <td><input type="hidden" name="workerId" th:value="${worker.getId()}"/>
+                    <button id="addButton" type="submit" class="btn btn-outline-primary">Добавить</button>
+                </td>
+            </tr>
+        </form>
+        </tbody>
+    </table>
+
+    <button id="popupButton" onclick="addPopup()" class="btn btn-outline-primary">+</button>
+
+    <span id="subdivisionNames" style="visibility:hidden" th:text="${subdivisionsNames}"></span>
+    <span id="postNames" style="visibility:hidden" th:text="${postsNames}"></span>
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            var arrPosts = document.getElementById("postNames").innerHTML.toString();
+            var arrSubdivisions = document.getElementById("subdivisionNames").innerHTML.toString();
+            $(function() {
+                $("#postName").autocomplete({
+                    source: arrPosts.substring(1, arrPosts.length - 1).split(", ")
+                });
+                $("#subdivisionName").autocomplete({
+                    source: arrSubdivisions.substring(1, arrSubdivisions.length - 1).split(", ")
+                });
+            } );
+        });
+    </script>
+</div>
+
+<div th:replace="general :: site-script"></div>
+
+<script type="text/javascript">
+    var hidden = true;
+    function addPopup() {
+        if (hidden)
+            document.getElementById('postHistoryTable').style.visibility = "visible"
+        else
+            document.getElementById('postHistoryTable').style.visibility = "hidden"
+        hidden = !hidden;
+    }
+</script>
+
+</html>

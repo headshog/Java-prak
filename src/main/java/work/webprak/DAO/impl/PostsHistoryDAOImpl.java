@@ -2,12 +2,9 @@ package work.webprak.DAO.impl;
 
 import org.springframework.stereotype.Repository;
 
-import work.webprak.DAO.Pair;
 import work.webprak.DAO.PostsHistoryDAO;
 import work.webprak.models.Workers;
 import work.webprak.models.PostsHistory;
-import work.webprak.models.Subdivisions;
-import work.webprak.models.Posts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +21,21 @@ public class PostsHistoryDAOImpl extends CommonDAOImpl<PostsHistory, Long> imple
         List<Workers> ret = new ArrayList<>();
         for (PostsHistory posts_hist : getAll()) {
             if (Objects.equals(posts_hist.getSubdivision().getId(), subd_id) &&
-                (!cur || (Objects.equals(posts_hist.getWork_end(), null)))) {
+                (!cur || (Objects.equals(posts_hist.getWorkEnd(), null)))) {
                 ret.add(posts_hist.getWorker());
+            }
+        }
+        return ret;
+    }
+
+    @Override
+    public List<PostsHistory> getPostsHistoryFromSubdivision(Long subd_id, boolean cur) {
+        List<PostsHistory> ret = new ArrayList<>();
+        for (PostsHistory posts_hist : getAll()) {
+            if (posts_hist.getSubdivision() != null &&
+                Objects.equals(posts_hist.getSubdivision().getId(), subd_id) &&
+                (!cur || (Objects.equals(posts_hist.getWorkEnd(), null)))) {
+                ret.add(posts_hist);
             }
         }
         return ret;
@@ -36,7 +46,7 @@ public class PostsHistoryDAOImpl extends CommonDAOImpl<PostsHistory, Long> imple
         List<Workers> ret = new ArrayList<>();
         for (PostsHistory posts_hist : getAll()) {
             if (Objects.equals(posts_hist.getPost().getId(), post_id) &&
-                (!cur || (Objects.equals(posts_hist.getWork_end(), null)))) {
+                (!cur || (Objects.equals(posts_hist.getWorkEnd(), null)))) {
                 ret.add(posts_hist.getWorker());
             }
         }
@@ -44,11 +54,11 @@ public class PostsHistoryDAOImpl extends CommonDAOImpl<PostsHistory, Long> imple
     }
 
     @Override
-    public List<Pair<Posts, Subdivisions>> getWorkerHistory(Long worker_id) {
-        List<Pair<Posts, Subdivisions>> ret = new ArrayList<>();
+    public List<PostsHistory> getWorkerHistory(Long worker_id) {
+        List<PostsHistory> ret = new ArrayList<>();
         for (PostsHistory posts_hist : getAll()) {
             if (Objects.equals(posts_hist.getWorker().getId(), worker_id)) {
-                ret.add(new Pair<Posts, Subdivisions>(posts_hist.getPost(), posts_hist.getSubdivision()));
+                ret.add(posts_hist);
             }
         }
         return ret;

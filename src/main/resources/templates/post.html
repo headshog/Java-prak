@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Должность</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        .post {
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="general :: page-header"> </div>
+
+<div class="post">
+    <div id="postInfo">
+        <h4 th:text="${post.getName()}"></h4>
+        <p th:text="'Название:    ' + ${post.getName()}"></p>
+        <p th:text="'Обязанности: ' + ${post.getResponsibilities()}"></p>
+    </div>
+
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            <form style="margin-right: 30px" method="get" action="/editPost">
+                <input type="hidden" name="postId" th:value="${post.getId()}"/>
+                <button id="editButton" type="submit" class="btn btn-outline-primary">Редактировать</button>
+            </form>
+            <form style="margin-right: 30px" method="post" action="/removePost">
+                <input type="hidden" name="postId" th:value="${post.getId()}"/>
+                <button id="deleteButton" type="submit" onclick="return confirm('Удалить данную запись?')"
+                        class="btn btn-outline-primary">Удалить</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="general :: site-script"></div>
+
+</body>
+</html>

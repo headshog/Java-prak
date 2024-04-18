@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import work.webprak.DAO.PostsHistoryDAO;
 import work.webprak.DAO.WorkersDAO;
-import work.webprak.DAO.Pair;
 import work.webprak.models.Workers;
-import work.webprak.models.Subdivisions;
-import work.webprak.models.Posts;
+import work.webprak.models.PostsHistory;
 
 import java.util.List;
 
@@ -41,7 +39,7 @@ public class WorkersDAOimpl extends CommonDAOImpl<Workers, Long> implements Work
     }
 
     @Override
-    public List<Pair<Posts, Subdivisions>> getWorkerHistory(Long worker_id) {
+    public List<PostsHistory> getWorkerHistory(Long worker_id) {
         return posts_history.getWorkerHistory(worker_id);
     }
 

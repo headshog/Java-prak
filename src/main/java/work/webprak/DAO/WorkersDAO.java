@@ -1,7 +1,6 @@
 package work.webprak.DAO;
 
-import work.webprak.models.Posts;
-import work.webprak.models.Subdivisions;
+import work.webprak.models.PostsHistory;
 import work.webprak.models.Workers;
 
 import java.util.List;
@@ -19,5 +18,5 @@ public interface WorkersDAO extends CommonDAO<Workers, Long> {
     List<Workers> getWorkersFromPosts(Long post_id, boolean cur);
     // Search for all pairs of Posts and Subdivisions that current
     // Worker ever held (for Workers page history subtables).
-    List<Pair<Posts, Subdivisions>> getWorkerHistory(Long worker_id);
+    List<PostsHistory> getWorkerHistory(Long worker_id);
 }

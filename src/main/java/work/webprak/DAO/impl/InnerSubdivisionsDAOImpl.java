@@ -25,4 +25,15 @@ public class InnerSubdivisionsDAOImpl extends CommonDAOImpl<InnerSubdivisions, L
         }
         return ret;
     }
+
+    @Override
+    public Long getPairId(Long main_subd_id, Long subd_id) {
+        for (InnerSubdivisions inner_subd : getAll()) {
+            if (Objects.equals(inner_subd.getInner_subdivision().getId(), subd_id) &&
+                Objects.equals(inner_subd.getMain_subdivision().getId(), main_subd_id)) {
+                return inner_subd.getId();
+            }
+        }
+        return 0L;
+    }
 }

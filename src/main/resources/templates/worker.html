@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        .worker {
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-top: 20px;
+        }
+    </style>
+    <title>Информация о сотруднике</title>
+</head>
+
+<body>
+
+<div th:replace="general :: page-header"> </div>
+
+<div class="worker">
+    <div id="workerInfo">
+        <h4 th:text="${worker.getName()}"></h4>
+        <p th:text="'ФИО:              ' + ${worker.getName()}"></p>
+        <p th:text="'Дата рождения:    ' + ${worker.getBirthDate()}"></p>
+        <p th:text="'Адрес проживания: ' + ${worker.getAddress()}"></p>
+        <p th:text="'Образование:      ' + ${worker.getGraduation()}"></p>
+        <p th:text="'Опыт работы:      ' + ${worker.getExperience()}"></p>
+
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <form style="margin-right: 30px" method="get" action="/editWorker">
+                    <input type="hidden" name="workerId" th:value="${worker.getId()}"/>
+                    <button id="editButton" type="submit" class="btn btn-outline-primary">Редактировать</button>
+                </form>
+                <form style="margin-right: 30px" method="post" action="/removeWorker">
+                    <input type="hidden" name="workerId" th:value="${worker.getId()}"/>
+                    <button id="deleteButton" type="submit" onclick="return confirm('Удалить данную запись?')"
+                            class="btn btn-outline-primary">Удалить</button>
+                </form>
+            </div>
+        </div>
+        <br>
+
+        <h4>История сотрудника</h4>
+
+        <div class="input-filter-container"><label for="input-filter">Искать в таблице:</label>
+            <input onkeyup="filterTableAll('input-filter', 'table')" type="search" id="input-filter" placeholder="искать">
+        </div>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col"> Должность </th>
+                <th scope="col"> Подразделение </th>
+                <th scope="col"> Начало работы </th>
+                <th scope="col"> Конец работы </th>
+            </tr>
+            </thead>
+            <tbody id="table">
+            <tr th:each="history : ${workerHistory}">
+                <td><a th:if="${history.getPost() != null}"
+                       th:href="'/post?postId=' + ${history.getPost().getId()}">
+                    <span th:text="${history.getPost().getName()}"> </span></a>
+                    <span th:if="${history.getPost() == null}"
+                          th:text="Удалено"> </span>
+                </td>
+
+                <td><a th:if="${history.getSubdivision() != null}"
+                       th:href="'/subdivision?subdivisionId=' + ${history.getSubdivision().getId()}">
+                    <span th:text="${history.getSubdivision().getName()}"> </span></a>
+                    <span th:if="${history.getSubdivision() == null}"
+                          th:text="Удалено"> </span>
+                </td>
+
+                <td><span th:text="${history.getWorkStart()}"> </span></td>
+
+                <td><span th:if="${history.getWorkEnd() != null}" th:text="${history.getWorkEnd()}"> </span>
+                    <span th:if="${history.getWorkEnd() == null}" th:text="Активен"> </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="general :: site-script"></div>
+
+</body>
+</html>

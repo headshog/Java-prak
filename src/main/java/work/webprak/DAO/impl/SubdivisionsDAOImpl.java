@@ -9,6 +9,7 @@ import work.webprak.DAO.PostsHistoryDAO;
 import work.webprak.DAO.SubdivisionsDAO;
 import work.webprak.DAO.InnerSubdivisionsDAO;
 import work.webprak.models.Workers;
+import work.webprak.models.PostsHistory;
 import work.webprak.models.Subdivisions;
 
 import java.util.ArrayList;
@@ -50,6 +51,11 @@ public class SubdivisionsDAOImpl extends CommonDAOImpl<Subdivisions, Long> imple
     @Override
     public List<Workers> getWorkersFromSubdivision(Long subd_id) {
         return posts_history.getWorkersFromSubdivision(subd_id, true);
+    }
+
+    @Override
+    public List<PostsHistory> getPostsHistoryFromSubdivision(Long subd_id) {
+        return posts_history.getPostsHistoryFromSubdivision(subd_id, true);
     }
 
     @Override

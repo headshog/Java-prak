@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Должности</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        .posts {
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="general :: page-header"></div>
+
+<div class="posts">
+    <h4>Добавить новую должность:</h4>
+
+    <table>
+        <tbody>
+        <form method="post" action="/savePost">
+            <tr>
+            <td><label for="postName">Название:</label></td>
+            <td><input type="text" id="postName" required name="postName"></td>
+            </tr>
+
+            <tr>
+            <td><label for="postName">Обязанности:</label></td>
+            <td><input type="text" id="postDescription" required name="postDescription"></td>
+            </tr>
+
+            <tr>
+            <td><input id="submitButton" type="submit" value="Добавить" class="btn btn-outline-primary"></td>
+            </tr>
+        </form>
+        </tbody>
+    </table>
+    <br>
+
+    <div class="input-filter-container"><label for="input-filter">Искать в таблице:</label>
+        <input onkeyup="filterTableAll('input-filter', 'table')" type="search" id="input-filter" placeholder="искать">
+    </div>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col"> Название должности</th>
+        </tr>
+        </thead>
+        <tbody id="table">
+        <tr th:each="post : ${posts}">
+            <td><a th:href="'/post?postId=' + ${post.getId()}">
+                <span th:text="${post.getName()}"> </span></a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="general :: site-script"></div>
+
+</body>
+</html>

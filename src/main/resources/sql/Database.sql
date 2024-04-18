@@ -40,8 +40,8 @@ CREATE TABLE InnerSubdivisions (
   ID SERIAL PRIMARY KEY,
   MainSubdID INT NOT NULL,
   InnerSubdID INT NOT NULL,
-  CONSTRAINT head_constraint FOREIGN KEY (MainSubdID) REFERENCES Subdivisions(ID) MATCH FULL ON DELETE CASCADE,
-  CONSTRAINT inner_constraint FOREIGN KEY (InnerSubdID) REFERENCES Subdivisions(ID) MATCH FULL ON DELETE CASCADE
+  CONSTRAINT head_constraint FOREIGN KEY (MainSubdID) REFERENCES Subdivisions(ID) MATCH FULL ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT inner_constraint FOREIGN KEY (InnerSubdID) REFERENCES Subdivisions(ID) MATCH FULL ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE PostsHistory (
@@ -75,7 +75,7 @@ INSERT INTO Workers (Name, Address, Graduation, Experience, BirthDate) VALUES
   ('Kathy Burch', '8495 Oak Road Bridgewater, NJ 08807', 'ABCD', 13, '2002-09-30');
 
 INSERT INTO Posts (Name, Responsibilities) VALUES
-  ('reach', 'fall'),
+  ('subdivision director', 'fall'),
   ('bulb', 'distribute'),
   ('species', 'amend'),
   ('family', 'apply'),
@@ -107,7 +107,7 @@ INSERT INTO InnerSubdivisions (MainSubdID, InnerSubdID) VALUES
   (3, 5),
   (3, 6),
   (3, 10),
-  (5, 9);
+  (4, 9);
 
 INSERT INTO PostsHistory (WorkerID, PostID, SubdivisionID, WorkStart, WorkEnd) VALUES
   (1, 1, 1, time_now(-2), NULL),
